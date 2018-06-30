@@ -1,0 +1,15 @@
+=form_for @user do |f|   
+	.form-group
+		= f.label :name 
+		= f.text_field :name, class: "form-control", placeholder:"Username", required:""
+	- if @roles.present? 
+		-@roles.each.with_index do |role,index| 
+			-role_user = @user.role_users.where(role_id: role.id).last
+			= hidden_field_tag "user[role_users_attributes][#{index}][id]",role_user.try(:id) 
+			= hidden_field_tag "user[role_users_attributes][#{index}][role_id]",role.id		
+			= hidden_field_tag "user[role_users_attributes][#{index}][_destroy]",true
+			= check_box_tag "user[role_users_attributes][#{index}][_destroy]",false, @user.roles.include?(role)
+
+			= role.name			
+	= f.submit 'submit',class: "btn btn-primary"
+
